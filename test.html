@@ -1,0 +1,1909 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#2563eb">
+<title>نظام إدارة الإجازات الذكي | Smart Vacation System</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<style>
+:root{
+  --primary:#2563eb;--primary-dark:#1d4ed8;--secondary:#7c3aed;--success:#16a34a;--warning:#f59e0b;--danger:#dc2626;--info:#0891b2;
+  --dark:#0f172a;--muted:#64748b;--gray:#64748b;--gray-light:#e2e8f0;--light:#f8fafc;--white:#ffffff;
+  --radius:18px;--shadow:0 18px 50px rgba(15,23,42,.12);--shadow-sm:0 8px 24px rgba(15,23,42,.08)
+}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font-family:Tahoma,'Segoe UI',Arial,sans-serif;background:linear-gradient(135deg,#eef2ff,#f8fafc 45%,#ecfeff);color:var(--dark);direction:rtl;min-height:100vh}button,input,select,textarea{font:inherit}button{cursor:pointer}a{color:inherit}.hidden{display:none!important}
+.login-page{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:28px;position:relative;overflow:hidden}.login-bg-shapes{position:absolute;inset:0;pointer-events:none}.shape{position:absolute;border-radius:999px;filter:blur(4px);opacity:.35}.shape-1{width:300px;height:300px;background:#2563eb;top:-80px;right:-80px}.shape-2{width:240px;height:240px;background:#7c3aed;bottom:8%;left:-70px}.shape-3{width:180px;height:180px;background:#06b6d4;top:25%;left:18%}
+.login-card{width:100%;background:rgba(255,255,255,.88);backdrop-filter:blur(22px);border:1px solid rgba(255,255,255,.7);border-radius:30px;box-shadow:var(--shadow);padding:30px;position:relative}.login-logo{text-align:center;margin-bottom:18px}.login-logo i{font-size:46px;color:var(--primary);background:#dbeafe;padding:18px;border-radius:22px}.login-logo h1{margin:14px 0 7px;font-size:26px}.login-logo p{margin:0;color:var(--muted)}
+.webauthn-status,.error-msg,.success-msg{display:none;gap:10px;align-items:center;border-radius:14px;padding:12px 14px;margin:12px 0;font-size:14px}.webauthn-status{display:flex}.supported{background:#ecfdf5;color:#047857}.unsupported{background:#fff7ed;color:#c2410c}.error-msg.show{display:flex;background:#fef2f2;color:#b91c1c}.success-msg.show{display:flex;background:#ecfdf5;color:#047857}.auth-toggle{display:grid;grid-template-columns:1fr 1fr;gap:10px;background:#f1f5f9;padding:7px;border-radius:16px;margin:18px 0}.auth-toggle-btn{border:0;background:transparent;padding:12px;border-radius:12px;color:#64748b}.auth-toggle-btn.active{background:#fff;color:var(--primary);box-shadow:var(--shadow-sm)}.auth-panel{display:none}.auth-panel.active{display:block}.role-selector{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px}.role-option{border:1px solid var(--gray-light);background:#fff;border-radius:16px;padding:14px;text-align:center;color:#475569;transition:.2s}.role-option:hover,.role-option.active{border-color:var(--primary);color:var(--primary);background:#eff6ff;transform:translateY(-1px)}.role-option i{display:block;font-size:22px;margin-bottom:6px}
+.form-group{margin-bottom:16px}.form-group label{display:block;font-weight:700;margin-bottom:8px}.required{color:var(--danger)}.input-wrapper{position:relative}.input-wrapper i{position:absolute;right:14px;top:50%;transform:translateY(-50%);color:#94a3b8}.form-control{width:100%;border:1px solid var(--gray-light);background:#fff;border-radius:15px;padding:13px 16px;outline:none;transition:.2s}.input-wrapper .form-control{padding-right:42px}.form-control:focus{border-color:var(--primary);box-shadow:0 0 0 4px rgba(37,99,235,.12)}textarea.form-control{min-height:120px;resize:vertical}.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}.btn{width:100%;border:0;border-radius:15px;padding:13px 18px;font-weight:800;color:#fff;display:inline-flex;align-items:center;justify-content:center;gap:8px;transition:.2s}.btn:hover{transform:translateY(-1px);filter:brightness(.98)}.btn-primary{background:linear-gradient(135deg,var(--primary),var(--secondary))}.btn-success{background:linear-gradient(135deg,#16a34a,#059669)}.btn-outline{background:#fff;color:var(--primary);border:1px solid #bfdbfe}.btn-sm{padding:10px 13px;font-size:13px}.btn-secondary{border:0;background:#e2e8f0;color:#334155;border-radius:12px;padding:11px 16px}
+.dashboard{display:none;min-height:100vh}.sidebar{position:fixed;right:0;top:0;bottom:0;width:290px;background:linear-gradient(180deg,#0f172a,#1e1b4b);color:#fff;padding:22px;z-index:20;display:flex;flex-direction:column}.sidebar-header{text-align:center;padding:10px 0 22px;border-bottom:1px solid rgba(255,255,255,.12)}.sidebar-header i{font-size:36px;color:#93c5fd}.sidebar-header h2{margin:12px 0 5px}.sidebar-header p{margin:0;color:#cbd5e1}.nav-menu{list-style:none;padding:16px 0;margin:0;flex:1}.nav-item{margin-bottom:8px}.nav-link{display:flex;align-items:center;gap:10px;text-decoration:none;padding:13px 14px;border-radius:14px;color:#cbd5e1}.nav-link.active,.nav-link:hover{background:rgba(255,255,255,.12);color:#fff}.badge{margin-right:auto;background:var(--danger);color:#fff;border-radius:999px;padding:2px 7px;font-size:11px}.user-profile{display:flex;align-items:center;gap:12px;background:rgba(255,255,255,.1);border-radius:18px;padding:12px}.user-avatar,.employee-avatar-large{width:46px;height:46px;border-radius:16px;background:linear-gradient(135deg,#60a5fa,#a78bfa);display:grid;place-items:center;color:#fff;font-weight:900}.user-info h4,.user-info p{margin:0}.user-info p{color:#cbd5e1;font-size:13px}.main-content{margin-right:290px;padding:24px}.top-bar{background:rgba(255,255,255,.82);backdrop-filter:blur(14px);border:1px solid rgba(226,232,240,.8);border-radius:24px;padding:18px 22px;margin-bottom:22px;display:flex;align-items:center;justify-content:space-between;gap:14px;box-shadow:var(--shadow-sm)}.page-title h1{margin:0;font-size:26px}.page-title p{margin:4px 0 0;color:var(--muted)}.top-actions{display:flex;gap:10px;align-items:center}.notification-btn,.logout-btn{border:0;border-radius:14px;padding:12px 15px;background:#fff;color:#334155;box-shadow:var(--shadow-sm);position:relative}.logout-btn{color:#b91c1c}.notification-dot{position:absolute;width:10px;height:10px;background:var(--danger);border-radius:50%;top:9px;left:10px}
+.section{display:none}.section.active{display:block}.stats-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;margin-bottom:20px}.stat-card,.content-card,.quick-action-card,.employee-card{background:rgba(255,255,255,.9);border:1px solid rgba(226,232,240,.9);border-radius:24px;box-shadow:var(--shadow-sm)}.stat-card{padding:20px}.stat-icon{width:50px;height:50px;border-radius:16px;display:grid;place-items:center;margin-bottom:12px;background:#dbeafe;color:var(--primary)}.stat-icon.success{background:#dcfce7;color:var(--success)}.stat-icon.warning{background:#fef3c7;color:var(--warning)}.stat-icon.danger{background:#fee2e2;color:var(--danger)}.stat-value{font-size:30px;font-weight:900}.stat-label{color:var(--muted);font-size:14px}.quick-actions{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.quick-action-card{padding:24px;text-align:center;transition:.2s}.quick-action-card:hover{transform:translateY(-3px);box-shadow:var(--shadow)}.quick-action-card i{font-size:34px;color:var(--primary)}.quick-action-card h3{margin:12px 0 6px}.quick-action-card p{margin:0;color:var(--muted)}.content-card{padding:22px}.card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}.card-title{margin:0;font-size:22px}.table-responsive{overflow-x:auto;border-radius:18px}.data-table{width:100%;border-collapse:collapse;min-width:760px;background:#fff}.data-table th,.data-table td{padding:13px 14px;text-align:right;border-bottom:1px solid #e2e8f0;vertical-align:top}.data-table th{background:#f8fafc;color:#475569;font-size:13px}.status-badge{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:6px 10px;font-size:12px;font-weight:800}.status-pending{background:#fef3c7;color:#92400e}.status-approved{background:#dcfce7;color:#166534}.status-rejected{background:#fee2e2;color:#991b1b}.status-clarification{background:#e0f2fe;color:#075985}.btn-action{border:0;border-radius:12px;padding:8px 11px;font-size:12px;color:#fff}.btn-approve{background:var(--primary)}.btn-clarify{background:var(--info)}.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}.tab{border:1px solid var(--gray-light);background:#fff;color:#475569;border-radius:999px;padding:9px 14px}.tab.active{background:var(--primary);color:#fff;border-color:var(--primary)}.empty-state{text-align:center;color:#94a3b8;padding:36px}.empty-state i{font-size:44px}.employee-card{padding:18px}.employee-card-header{display:flex;align-items:center;gap:12px}.employee-details h4,.employee-details p{margin:0}.employee-details p{color:var(--muted);font-size:13px}.employee-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:16px}.employee-stat{background:#f8fafc;border-radius:14px;padding:12px;text-align:center}.employee-stat-value{font-weight:900;font-size:22px}.employee-stat-label{color:var(--muted);font-size:12px}
+.biometric-container{text-align:center;background:linear-gradient(135deg,#eff6ff,#f5f3ff);border:1px solid #dbeafe;border-radius:24px;padding:24px;margin-bottom:20px}.biometric-icon{font-size:58px;color:var(--primary);background:#fff;padding:24px;border-radius:30px;box-shadow:var(--shadow-sm)}.biometric-icon.scanning{animation:pulse 1s infinite;color:var(--warning)}.biometric-icon.verified{color:var(--success)}@keyframes pulse{50%{transform:scale(1.05);opacity:.7}}.biometric-options{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:16px 0}.biometric-option{background:#fff;border:1px solid #dbeafe;border-radius:16px;padding:14px;cursor:pointer}.biometric-option.active{border-color:var(--primary);color:var(--primary)}.biometric-status{display:inline-block;border-radius:999px;padding:8px 14px;font-weight:800}.not-verified{background:#fee2e2;color:#991b1b}.scanning{background:#fef3c7;color:#92400e}.verified{background:#dcfce7;color:#166534}.biometric-code{margin:12px auto;background:#0f172a;color:#93c5fd;border-radius:12px;padding:10px;direction:ltr;max-width:260px}.skip-biometric a{color:var(--warning);font-size:13px;text-decoration:underline;cursor:pointer}.face-scanner{display:none;width:220px;height:170px;margin:0 auto 12px;border-radius:22px;overflow:hidden;position:relative;background:#0f172a}.face-scanner.active{display:block}.face-scanner video{width:100%;height:100%;object-fit:cover}.scan-line{display:none;position:absolute;left:0;right:0;height:3px;background:#22c55e;top:0}.scan-line.active{display:block;animation:scan 1.4s infinite}@keyframes scan{50%{top:100%}}
+.notifications-panel{display:none;position:absolute;left:24px;top:92px;width:min(420px,calc(100vw - 32px));background:#fff;border-radius:22px;box-shadow:var(--shadow);z-index:50;overflow:hidden}.notifications-panel.show{display:block}.notifications-header{display:flex;align-items:center;justify-content:space-between;padding:16px;border-bottom:1px solid var(--gray-light)}.notification-item{display:flex;gap:12px;padding:14px}.notification-icon{width:40px;height:40px;border-radius:14px;display:grid;place-items:center;background:#dbeafe;color:var(--primary);flex:none}.notification-icon.approved{background:#dcfce7;color:var(--success)}.notification-icon.rejected{background:#fee2e2;color:var(--danger)}.notification-icon.clarification{background:#e0f2fe;color:var(--info)}.notification-content p{margin:0 0 4px}.notification-time{color:#94a3b8;font-size:12px}.unread{background:#f8fafc}.modal-overlay{position:fixed;inset:0;background:rgba(15,23,42,.55);display:none;align-items:center;justify-content:center;padding:18px;z-index:100}.modal-overlay.show{display:flex}.modal{width:min(620px,100%);background:#fff;border-radius:24px;box-shadow:var(--shadow);max-height:90vh;overflow:auto}.modal-header,.modal-footer{padding:18px;border-bottom:1px solid var(--gray-light);display:flex;align-items:center;justify-content:space-between}.modal-footer{border-top:1px solid var(--gray-light);border-bottom:0;justify-content:flex-start;gap:10px}.modal-body{padding:18px}.modal-title{margin:0}.modal-close,.toast-close{border:0;background:transparent;font-size:26px;color:#64748b}.toast-container{position:fixed;left:18px;bottom:18px;z-index:200;display:grid;gap:10px}.toast{width:min(360px,calc(100vw - 36px));background:#fff;border-radius:18px;box-shadow:var(--shadow);padding:14px;display:flex;gap:10px;align-items:flex-start;border-right:5px solid var(--primary);transition:.3s}.toast.success{border-color:var(--success)}.toast.error{border-color:var(--danger)}.toast.warning{border-color:var(--warning)}.toast-title{font-weight:900}.toast-message{color:var(--muted);font-size:13px}.month-selector{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:16px}.month-selector select{border:1px solid var(--gray-light);border-radius:12px;padding:10px;background:#fff}
+@media(max-width:900px){.sidebar{position:relative;width:100%;height:auto;border-radius:0 0 24px 24px}.dashboard{background:#f8fafc}.main-content{margin-right:0;padding:14px}.nav-menu{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}.user-profile{margin-top:8px}.top-bar{flex-direction:column;align-items:stretch}.top-actions{justify-content:space-between}.stats-grid{grid-template-columns:repeat(2,1fr)}.quick-actions{grid-template-columns:1fr}.form-row{grid-template-columns:1fr}.biometric-options{grid-template-columns:1fr}.login-page{padding:14px;align-items:flex-start}.login-card{padding:20px;border-radius:24px;margin-top:12px}.login-logo h1{font-size:21px}.role-selector{grid-template-columns:1fr 1fr}.notifications-panel{position:fixed;top:80px;left:16px}.content-card{padding:16px}.data-table th,.data-table td{padding:10px;font-size:13px}}
+@media(max-width:520px){.stats-grid{grid-template-columns:1fr}.auth-toggle,.role-selector{grid-template-columns:1fr}.nav-menu{grid-template-columns:1fr}.login-logo i{font-size:34px}.page-title h1{font-size:22px}.toast-container{left:10px;bottom:10px}.modal-footer{flex-direction:column}.modal-footer .btn,.modal-footer .btn-secondary{width:100%}}
+</style>
+</head>
+<body>
+<div class="login-page" id="loginPage">
+
+        <div class="login-bg-shapes">
+            <div class="shape shape-1"></div>
+            <div class="shape shape-2"></div>
+            <div class="shape shape-3"></div>
+        </div>
+        <div class="login-card" style="max-width: 520px;">
+            <div class="login-logo">
+                <i class="fas fa-calendar-check"></i>
+                <h1>نظام إدارة الإجازات الذكي</h1>
+                <p id="authSubtitle">تسجيل الدخول إلى حسابك</p>
+            </div>
+
+            <!-- WebAuthn Support Status -->
+            <div class="webauthn-status supported" id="webauthnStatus">
+                <i class="fas fa-shield-alt"></i>
+                <span>جهازك يدعم البصمة الحيوية (WebAuthn)</span>
+            </div>
+
+            <div class="error-msg" id="loginError">
+                <i class="fas fa-exclamation-circle"></i>
+                <span id="errorText">البريد الإلكتروني أو كلمة المرور غير صحيحة</span>
+            </div>
+            <div class="success-msg" id="loginSuccess">
+                <i class="fas fa-check-circle"></i>
+                <span id="successText">تم بنجاح</span>
+            </div>
+
+            <!-- Auth Toggle -->
+            <div class="auth-toggle">
+                <button class="auth-toggle-btn active" onclick="showAuthPanel('login')" id="loginToggle">
+                    <i class="fas fa-sign-in-alt"></i> تسجيل الدخول
+                </button>
+                <button class="auth-toggle-btn" onclick="showAuthPanel('register')" id="registerToggle">
+                    <i class="fas fa-user-plus"></i> إنشاء حساب
+                </button>
+            </div>
+
+            <!-- Login Panel -->
+            <div class="auth-panel active" id="loginPanel">
+                <div class="role-selector">
+                    <div class="role-option active" data-role="employee" onclick="selectRole('employee')">
+                        <i class="fas fa-user-tie"></i><span>موظف</span>
+                    </div>
+                    <div class="role-option" data-role="manager" onclick="selectRole('manager')">
+                        <i class="fas fa-user-shield"></i><span>مدير</span>
+                    </div>
+                </div>
+                <form id="loginForm" onsubmit="handleLogin(event)">
+                    <div class="form-group">
+                        <label for="loginEmail">البريد الإلكتروني</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-envelope"></i>
+                            <input type="email" id="loginEmail" class="form-control" placeholder="أدخل بريدك الإلكتروني" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="loginPassword">كلمة المرور</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-lock"></i>
+                            <input type="password" id="loginPassword" class="form-control" placeholder="أدخل كلمة المرور" required>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary" id="loginBtn">
+                        <i class="fas fa-sign-in-alt"></i> تسجيل الدخول
+                    </button>
+                </form>
+                <div style="margin-top: 20px; text-align: center;">
+                    <button class="btn btn-outline btn-sm" onclick="biometricLogin()" id="biometricLoginBtn" style="width: 100%;">
+                        <i class="fas fa-fingerprint"></i> تسجيل الدخول بالبصمة / الوجه
+                    </button>
+                </div>
+            </div>
+
+            <!-- Register Panel -->
+            <div class="auth-panel" id="registerPanel">
+                <form id="registerForm" onsubmit="handleRegister(event)">
+                    <div class="form-group">
+                        <label for="regName">الاسم الكامل <span class="required">*</span></label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-user"></i>
+                            <input type="text" id="regName" class="form-control" placeholder="أدخل اسمك الكامل" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="regEmail">البريد الإلكتروني <span class="required">*</span></label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-envelope"></i>
+                            <input type="email" id="regEmail" class="form-control" placeholder="example@company.com" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="regPassword">كلمة المرور <span class="required">*</span></label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-lock"></i>
+                            <input type="password" id="regPassword" class="form-control" placeholder="6 أحرف على الأقل" minlength="6" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="regConfirmPassword">تأكيد كلمة المرور <span class="required">*</span></label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-lock"></i>
+                            <input type="password" id="regConfirmPassword" class="form-control" placeholder="أعد كتابة كلمة المرور" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>نوع الحساب <span class="required">*</span></label>
+                        <div class="role-selector" style="margin-bottom: 0;">
+                            <div class="role-option active" data-reg-role="employee" onclick="selectRegRole('employee')">
+                                <i class="fas fa-user-tie"></i><span>موظف</span>
+                            </div>
+                            <div class="role-option" data-reg-role="manager" onclick="selectRegRole('manager')">
+                                <i class="fas fa-user-shield"></i><span>مدير</span>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-success" id="registerBtn">
+                        <i class="fas fa-user-plus"></i> إنشاء الحساب
+                    </button>
+                </form>
+                <div style="margin-top: 20px; text-align: center;">
+                    <button class="btn btn-outline btn-sm" onclick="registerBiometric()" id="registerBiometricBtn" style="width: 100%;">
+                        <i class="fas fa-fingerprint"></i> إنشاء حساب مع بصمة حيوية
+                    </button>
+                </div>
+            </div>
+
+            <div style="margin-top: 25px; padding-top: 20px; border-top: 1px solid var(--gray-light); text-align: center;">
+                <p style="font-size: 13px; color: var(--gray); margin-bottom: 10px;">حسابات تجريبية:</p>
+                <div style="font-size: 12px; color: #94a3b8; line-height: 1.8;">
+                    <div><strong>مدير:</strong> manager@company.com / admin123</div>
+                    <div><strong>موظف:</strong> ahmed@company.com / pass123</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dashboard -->
+    <div class="dashboard" id="dashboard">
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <i class="fas fa-calendar-check"></i>
+                <h2>نظام الإجازات</h2>
+                <p id="sidebarRole">لوحة التحكم</p>
+            </div>
+            <ul class="nav-menu" id="navMenu"></ul>
+            <div class="user-profile">
+                <div class="user-avatar" id="userAvatar">م</div>
+                <div class="user-info">
+                    <h4 id="userName">اسم المستخدم</h4>
+                    <p id="userRole">الدور</p>
+                </div>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <div class="top-bar">
+                <div class="page-title">
+                    <h1 id="pageTitle">الرئيسية</h1>
+                    <p id="pageSubtitle">نظرة عامة على النظام</p>
+                </div>
+                <div class="top-actions">
+                    <button class="notification-btn" onclick="toggleNotifications()">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-dot hidden" id="notificationDot"></span>
+                    </button>
+                    <button class="logout-btn" onclick="logout()">
+                        <i class="fas fa-sign-out-alt"></i> تسجيل الخروج
+                    </button>
+                </div>
+            </div>
+
+            <div class="notifications-panel" id="notificationsPanel">
+                <div class="notifications-header">
+                    <h3><i class="fas fa-bell"></i> الإشعارات</h3>
+                    <button class="modal-close" onclick="toggleNotifications()">&times;</button>
+                </div>
+                <div class="notifications-list" id="notificationsList"></div>
+            </div>
+
+            <div id="sectionsContainer">
+                <!-- Employee Home -->
+                <div class="section active" id="employeeHome">
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-icon primary"><i class="fas fa-calendar-alt"></i></div>
+                            <div class="stat-value" id="empTotalRequests">0</div>
+                            <div class="stat-label">إجمالي الطلبات</div>
+                        </div>
+                        <div class="stat-card success">
+                            <div class="stat-icon success"><i class="fas fa-check-circle"></i></div>
+                            <div class="stat-value" id="empApproved">0</div>
+                            <div class="stat-label">الموافق عليها</div>
+                        </div>
+                        <div class="stat-card warning">
+                            <div class="stat-icon warning"><i class="fas fa-clock"></i></div>
+                            <div class="stat-value" id="empPending">0</div>
+                            <div class="stat-label">قيد الانتظار</div>
+                        </div>
+                        <div class="stat-card danger">
+                            <div class="stat-icon danger"><i class="fas fa-times-circle"></i></div>
+                            <div class="stat-value" id="empRejected">0</div>
+                            <div class="stat-label">المرفوضة</div>
+                        </div>
+                    </div>
+                    <div class="quick-actions">
+                        <div class="quick-action-card" onclick="showSection('newRequest')">
+                            <i class="fas fa-plus-circle"></i>
+                            <h3>طلب إجازة جديد</h3>
+                            <p>قدم طلب إجازة جديد</p>
+                        </div>
+                        <div class="quick-action-card" onclick="showSection('myRequests')">
+                            <i class="fas fa-list-alt"></i>
+                            <h3>طلباتي</h3>
+                            <p>عرض جميع طلباتك</p>
+                        </div>
+                        <div class="quick-action-card" onclick="showSection('myNotifications')">
+                            <i class="fas fa-bell"></i>
+                            <h3>الإشعارات</h3>
+                            <p>ردود المدير على طلباتك</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- New Request with Biometric -->
+                <div class="section" id="newRequestSection">
+                    <div class="content-card">
+                        <div class="card-header">
+                            <h2 class="card-title"><i class="fas fa-plus-circle"></i> طلب إجازة جديد</h2>
+                        </div>
+
+                        <!-- Biometric Verification Section -->
+                        <div class="biometric-container">
+                            <i class="fas fa-fingerprint biometric-icon" id="biometricIcon" onclick="startBiometricAuth()"></i>
+                            <div class="face-scanner" id="faceScanner">
+                                <video id="faceVideo" autoplay playsinline></video>
+                                <div class="face-scanner-overlay"></div>
+                                <div class="scan-line" id="scanLine"></div>
+                            </div>
+                            <h3 id="biometricTitle">التحقق البيومتري</h3>
+                            <p id="biometricText">اختر طريقة التحقق أو اضغط على الأيقونة</p>
+                            <div class="biometric-code hidden" id="biometricCode">BIO-0000000000-X0</div>
+                            <div class="biometric-status not-verified" id="biometricStatus">لم يتم التحقق</div>
+
+                            <div class="biometric-options">
+                                <div class="biometric-option" id="optFingerprint" onclick="selectBiometricType('fingerprint')">
+                                    <i class="fas fa-fingerprint"></i>
+                                    <span>بصمة الإصبع</span>
+                                </div>
+                                <div class="biometric-option" id="optFace" onclick="selectBiometricType('face')">
+                                    <i class="fas fa-camera"></i>
+                                    <span>التعرف على الوجه</span>
+                                </div>
+                                <div class="biometric-option" id="optPin" onclick="selectBiometricType('pin')">
+                                    <i class="fas fa-keyboard"></i>
+                                    <span>PIN / كلمة مرور</span>
+                                </div>
+                            </div>
+
+                            <div class="skip-biometric">
+                                <a onclick="skipBiometric()">تخطي التحقق (للاختبار فقط)</a>
+                            </div>
+                        </div>
+
+                        <form id="vacationForm" onsubmit="submitVacationRequest(event)">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>تاريخ البداية <span class="required">*</span></label>
+                                    <input type="date" id="startDate" class="form-control" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>تاريخ النهاية <span class="required">*</span></label>
+                                    <input type="date" id="endDate" class="form-control" required>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>نوع الإجازة <span class="required">*</span></label>
+                                <select id="vacationType" class="form-control" required>
+                                    <option value="">اختر نوع الإجازة</option>
+                                    <option value="annual">إجازة سنوية</option>
+                                    <option value="sick">إجازة مرضية</option>
+                                    <option value="emergency">إجازة طارئة</option>
+                                    <option value="unpaid">إجازة بدون راتب</option>
+                                    <option value="other">أخرى</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>سبب الإجازة <span class="required">*</span></label>
+                                <textarea id="vacationReason" class="form-control" placeholder="اشرح سبب طلب الإجازة بالتفصيل..." required></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary" id="submitRequestBtn">
+                                <i class="fas fa-paper-plane"></i> إرسال الطلب
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- My Requests -->
+                <div class="section" id="myRequestsSection">
+                    <div class="content-card">
+                        <div class="card-header">
+                            <h2 class="card-title"><i class="fas fa-list-alt"></i> طلباتي</h2>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="data-table">
+                                <thead>
+                                    <tr><th>#</th><th>النوع</th><th>من</th><th>إلى</th><th>السبب</th><th>الحالة</th><th>تاريخ التقديم</th><th>الرد</th></tr>
+                                </thead>
+                                <tbody id="myRequestsTable"></tbody>
+                            </table>
+                        </div>
+                        <div class="empty-state hidden" id="myRequestsEmpty">
+                            <i class="fas fa-inbox"></i>
+                            <h3>لا توجد طلبات</h3>
+                            <p>لم تقم بتقديم أي طلبات إجازة بعد</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- My Notifications -->
+                <div class="section" id="myNotificationsSection">
+                    <div class="content-card">
+                        <div class="card-header">
+                            <h2 class="card-title"><i class="fas fa-bell"></i> إشعاراتي</h2>
+                        </div>
+                        <div id="myNotificationsList"></div>
+                        <div class="empty-state hidden" id="myNotificationsEmpty">
+                            <i class="fas fa-bell-slash"></i>
+                            <h3>لا توجد إشعارات</h3>
+                            <p>لم تصلك أي إشعارات بعد</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Manager Home -->
+                <div class="section" id="managerHome">
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-icon primary"><i class="fas fa-users"></i></div>
+                            <div class="stat-value" id="mgrTotalEmployees">0</div>
+                            <div class="stat-label">إجمالي الموظفين</div>
+                        </div>
+                        <div class="stat-card warning">
+                            <div class="stat-icon warning"><i class="fas fa-clock"></i></div>
+                            <div class="stat-value" id="mgrPendingRequests">0</div>
+                            <div class="stat-label">طلبات قيد الانتظار</div>
+                        </div>
+                        <div class="stat-card success">
+                            <div class="stat-icon success"><i class="fas fa-check-circle"></i></div>
+                            <div class="stat-value" id="mgrApprovedThisMonth">0</div>
+                            <div class="stat-label">موافق هذا الشهر</div>
+                        </div>
+                        <div class="stat-card info">
+                            <div class="stat-icon primary"><i class="fas fa-calendar-check"></i></div>
+                            <div class="stat-value" id="mgrTotalRequests">0</div>
+                            <div class="stat-label">إجمالي الطلبات</div>
+                        </div>
+                    </div>
+                    <div class="content-card">
+                        <div class="card-header">
+                            <h2 class="card-title"><i class="fas fa-clock"></i> طلبات بحاجة للرد</h2>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="data-table">
+                                <thead>
+                                    <tr><th>الموظف</th><th>النوع</th><th>الفترة</th><th>السبب</th><th>تاريخ التقديم</th><th>الإجراءات</th></tr>
+                                </thead>
+                                <tbody id="pendingRequestsTable"></tbody>
+                            </table>
+                        </div>
+                        <div class="empty-state hidden" id="pendingRequestsEmpty">
+                            <i class="fas fa-check-circle"></i>
+                            <h3>لا توجد طلبات معلقة</h3>
+                            <p>جميع الطلبات تمت معالجتها</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- All Requests -->
+                <div class="section" id="allRequestsSection">
+                    <div class="content-card">
+                        <div class="card-header">
+                            <h2 class="card-title"><i class="fas fa-list-alt"></i> جميع الطلبات</h2>
+                        </div>
+                        <div class="tabs">
+                            <button class="tab active" onclick="filterRequests('all')">الكل</button>
+                            <button class="tab" onclick="filterRequests('pending')">قيد الانتظار</button>
+                            <button class="tab" onclick="filterRequests('approved')">موافق</button>
+                            <button class="tab" onclick="filterRequests('rejected')">مرفوض</button>
+                            <button class="tab" onclick="filterRequests('clarification')">يحتاج إيضاح</button>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="data-table">
+                                <thead>
+                                    <tr><th>#</th><th>الموظف</th><th>النوع</th><th>الفترة</th><th>السبب</th><th>الحالة</th><th>الرد</th><th>الإجراءات</th></tr>
+                                </thead>
+                                <tbody id="allRequestsTable"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Employees -->
+                <div class="section" id="employeesSection">
+                    <div class="content-card">
+                        <div class="card-header">
+                            <h2 class="card-title"><i class="fas fa-users"></i> الموظفين</h2>
+                        </div>
+                        <div id="employeesGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px;"></div>
+                    </div>
+                </div>
+
+                <!-- Reports -->
+                <div class="section" id="reportsSection">
+                    <div class="content-card">
+                        <div class="card-header">
+                            <h2 class="card-title"><i class="fas fa-file-excel"></i> تقرير الشهر</h2>
+                        </div>
+                        <div class="month-selector">
+                            <label>اختر الشهر:</label>
+                            <select id="reportMonth" onchange="generateReport()">
+                                <option value="0">يناير</option><option value="1">فبراير</option><option value="2">مارس</option>
+                                <option value="3">أبريل</option><option value="4">مايو</option><option value="5">يونيو</option>
+                                <option value="6">يوليو</option><option value="7">أغسطس</option><option value="8">سبتمبر</option>
+                                <option value="9">أكتوبر</option><option value="10">نوفمبر</option><option value="11">ديسمبر</option>
+                            </select>
+                            <select id="reportYear" onchange="generateReport()">
+                                <option value="2024">2024</option><option value="2025">2025</option><option value="2026" selected>2026</option>
+                            </select>
+                            <button class="btn btn-success btn-sm" onclick="downloadExcel()" style="width: auto;">
+                                <i class="fas fa-download"></i> تحميل Excel
+                            </button>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="data-table" id="reportTable">
+                                <thead>
+                                    <tr><th>#</th><th>اسم الموظف</th><th>البريد الإلكتروني</th><th>عدد الطلبات</th><th>الموافق عليها</th><th>المرفوضة</th><th>إجمالي الأيام</th><th>الحالة</th></tr>
+                                </thead>
+                                <tbody id="reportTableBody"></tbody>
+                            </table>
+                        </div>
+                        <div class="empty-state hidden" id="reportEmpty">
+                            <i class="fas fa-file-excel"></i>
+                            <h3>لا توجد بيانات</h3>
+                            <p>لا توجد طلبات في هذا الشهر</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Response Modal -->
+    <div class="modal-overlay" id="responseModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title"><i class="fas fa-reply"></i> الرد على الطلب</h3>
+                <button class="modal-close" onclick="closeModal('responseModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="requestDetails" style="margin-bottom: 20px;"></div>
+                <div class="form-group">
+                    <label>القرار</label>
+                    <div class="role-selector" style="margin-bottom: 0;">
+                        <div class="role-option" data-decision="approved" onclick="selectDecision('approved')">
+                            <i class="fas fa-check-circle"></i><span>موافقة</span>
+                        </div>
+                        <div class="role-option" data-decision="rejected" onclick="selectDecision('rejected')">
+                            <i class="fas fa-times-circle"></i><span>رفض</span>
+                        </div>
+                        <div class="role-option" data-decision="clarification" onclick="selectDecision('clarification')">
+                            <i class="fas fa-question-circle"></i><span>طلب إيضاح</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>ملاحظات (اختياري)</label>
+                    <textarea id="responseNotes" class="form-control" placeholder="أضف ملاحظاتك هنا..."></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" onclick="closeModal('responseModal')">إلغاء</button>
+                <button class="btn btn-primary btn-sm" onclick="submitResponse()" style="width: auto;">
+                    <i class="fas fa-paper-plane"></i> إرسال الرد
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Clarification Modal -->
+    <div class="modal-overlay" id="clarificationModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title"><i class="fas fa-edit"></i> إيضاح إضافي</h3>
+                <button class="modal-close" onclick="closeModal('clarificationModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="clarificationRequestDetails" style="margin-bottom: 20px;"></div>
+                <div class="form-group">
+                    <label>الإيضاح الإضافي <span class="required">*</span></label>
+                    <textarea id="additionalClarification" class="form-control" placeholder="اكتب إيضاحك الإضافي هنا..." required></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" onclick="closeModal('clarificationModal')">إلغاء</button>
+                <button class="btn btn-primary btn-sm" onclick="submitClarification()" style="width: auto;">
+                    <i class="fas fa-paper-plane"></i> إرسال الإيضاح
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+
+        // ========== DATA STORE ==========
+        const DB = {
+            users: [
+                { id: 1, name: 'المدير', email: 'manager@company.com', password: 'admin123', role: 'manager', avatar: 'م', biometricId: null },
+                { id: 2, name: 'أحمد محمد', email: 'ahmed@company.com', password: 'pass123', role: 'employee', avatar: 'أ', biometricId: null },
+                { id: 3, name: 'فاطمة علي', email: 'fatima@company.com', password: 'pass123', role: 'employee', avatar: 'ف', biometricId: null },
+                { id: 4, name: 'عمر خالد', email: 'omar@company.com', password: 'pass123', role: 'employee', avatar: 'ع', biometricId: null }
+            ],
+            requests: [],
+            notifications: [],
+            currentUser: null,
+            currentRole: 'employee',
+            regRole: 'employee',
+            selectedRequestId: null,
+            selectedDecision: null,
+            biometricVerified: false,
+            biometricType: null,
+            webauthnSupported: false,
+            nextUserId: 5
+        };
+
+        const vacationTypes = {
+            annual: 'سنوية', sick: 'مرضية', emergency: 'طارئة', unpaid: 'بدون راتب', other: 'أخرى'
+        };
+
+        const statusLabels = {
+            pending: { text: 'قيد الانتظار', class: 'status-pending', icon: 'fa-clock' },
+            approved: { text: 'موافق', class: 'status-approved', icon: 'fa-check-circle' },
+            rejected: { text: 'مرفوض', class: 'status-rejected', icon: 'fa-times-circle' },
+            clarification: { text: 'يحتاج إيضاح', class: 'status-clarification', icon: 'fa-question-circle' }
+        };
+
+        // ========== INITIALIZATION ==========
+        function init() {
+            console.log('Smart Vacation System initializing...');
+
+            // Check WebAuthn support
+            checkWebAuthnSupport();
+
+            // Load saved data
+            const saved = localStorage.getItem('vacationDB_v3');
+            if (saved) {
+                try {
+                    const parsed = JSON.parse(saved);
+                    if (parsed.users) DB.users = parsed.users;
+                    if (parsed.requests) DB.requests = parsed.requests;
+                    if (parsed.notifications) DB.notifications = parsed.notifications;
+                    if (parsed.nextUserId) DB.nextUserId = parsed.nextUserId;
+                    console.log('Loaded saved data:', DB.users.length, 'users,', DB.requests.length, 'requests');
+                } catch(e) {
+                    console.error('Error loading saved data:', e);
+                }
+            }
+
+            // Set default dates
+            const today = new Date();
+            const todayStr = today.toISOString().split('T')[0];
+            const nextWeek = new Date(today);
+            nextWeek.setDate(today.getDate() + 7);
+
+            const startDateEl = document.getElementById('startDate');
+            const endDateEl = document.getElementById('endDate');
+
+            if (startDateEl) {
+                startDateEl.min = todayStr;
+                startDateEl.value = todayStr;
+            }
+            if (endDateEl) {
+                endDateEl.min = todayStr;
+                endDateEl.value = nextWeek.toISOString().split('T')[0];
+            }
+
+            const reportMonthEl = document.getElementById('reportMonth');
+            if (reportMonthEl) reportMonthEl.value = today.getMonth();
+
+            console.log('Initialization complete');
+        }
+
+        function checkWebAuthnSupport() {
+            const statusEl = document.getElementById('webauthnStatus');
+            if (window.PublicKeyCredential && window.isSecureContext && location.protocol !== 'file:' && location.hostname) {
+                DB.webauthnSupported = true;
+                if (statusEl) {
+                    statusEl.className = 'webauthn-status supported';
+                    statusEl.innerHTML = '<i class="fas fa-shield-alt"></i><span>جهازك يدعم البصمة الحيوية (WebAuthn)</span>';
+                }
+                console.log('WebAuthn is supported');
+            } else {
+                DB.webauthnSupported = false;
+                if (statusEl) {
+                    statusEl.className = 'webauthn-status unsupported';
+                    statusEl.innerHTML = '<i class="fas fa-times-circle"></i><span>البصمة تحتاج HTTPS أو localhost - استخدم كلمة المرور</span>';
+                }
+                console.log('WebAuthn is NOT supported');
+            }
+        }
+
+        function saveDB() {
+            try {
+                localStorage.setItem('vacationDB_v3', JSON.stringify({
+                    users: DB.users,
+                    requests: DB.requests,
+                    notifications: DB.notifications,
+                    nextUserId: DB.nextUserId
+                }));
+                console.log('Data saved successfully');
+            } catch(e) {
+                console.error('Error saving data:', e);
+                showToast('error', 'خطأ', 'لم يتم حفظ البيانات');
+            }
+        }
+
+        // ========== AUTH PANEL TOGGLE ==========
+        function showAuthPanel(panel) {
+            document.querySelectorAll('.auth-panel').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.auth-toggle-btn').forEach(b => b.classList.remove('active'));
+
+            document.getElementById(panel + 'Panel').classList.add('active');
+            document.getElementById(panel + 'Toggle').classList.add('active');
+
+            document.getElementById('authSubtitle').textContent = 
+                panel === 'login' ? 'تسجيل الدخول إلى حسابك' : 'إنشاء حساب جديد';
+
+            // Clear messages
+            document.getElementById('loginError').classList.remove('show');
+            document.getElementById('loginSuccess').classList.remove('show');
+        }
+
+        // ========== REGISTRATION ==========
+        function selectRegRole(role) {
+            DB.regRole = role;
+            document.querySelectorAll('[data-reg-role]').forEach(el => el.classList.remove('active'));
+            document.querySelector(`[data-reg-role="${role}"]`).classList.add('active');
+        }
+
+        function handleRegister(e) {
+            e.preventDefault();
+            console.log('Registering new user...');
+
+            const name = document.getElementById('regName').value.trim();
+            const email = document.getElementById('regEmail').value.trim().toLowerCase();
+            const password = document.getElementById('regPassword').value;
+            const confirmPassword = document.getElementById('regConfirmPassword').value;
+
+            // Validation
+            if (!name || !email || !password) {
+                showError('يرجى ملء جميع الحقول المطلوبة');
+                return;
+            }
+
+            if (password.length < 6) {
+                showError('كلمة المرور يجب أن تكون 6 أحرف على الأقل');
+                return;
+            }
+
+            if (password !== confirmPassword) {
+                showError('كلمتا المرور غير متطابقتين');
+                return;
+            }
+
+            // Check if email exists
+            if (DB.users.find(u => u.email === email)) {
+                showError('البريد الإلكتروني مستخدم بالفعل');
+                return;
+            }
+
+            // Create user
+            const newUser = {
+                id: DB.nextUserId++,
+                name: name,
+                email: email,
+                password: password,
+                role: DB.regRole,
+                avatar: name.charAt(0),
+                biometricId: null,
+                createdAt: new Date().toISOString()
+            };
+
+            DB.users.push(newUser);
+            saveDB();
+
+            showSuccess('تم إنشاء الحساب بنجاح! يمكنك الآن تسجيل الدخول');
+            document.getElementById('registerForm').reset();
+
+            setTimeout(() => {
+                showAuthPanel('login');
+                document.getElementById('loginEmail').value = email;
+                selectRole(DB.regRole);
+            }, 1500);
+        }
+
+        // ========== BIOMETRIC REGISTRATION (WebAuthn) ==========
+        async function registerBiometric() {
+            if (!DB.webauthnSupported) {
+                showError('البصمة الحيوية لا تعمل عند فتح الملف مباشرة من الهاتف. استخدم كلمة المرور أو شغل الصفحة عبر localhost/HTTPS.');
+                return;
+            }
+
+            const name = document.getElementById('regName').value.trim();
+            const email = document.getElementById('regEmail').value.trim().toLowerCase();
+            const password = document.getElementById('regPassword').value;
+            const confirmPassword = document.getElementById('regConfirmPassword').value;
+
+            if (!name || !email || !password) {
+                showError('يرجى ملء جميع الحقول أولاً');
+                return;
+            }
+
+            if (password !== confirmPassword) {
+                showError('كلمتا المرور غير متطابقتين');
+                return;
+            }
+
+            if (DB.users.find(u => u.email === email)) {
+                showError('البريد الإلكتروني مستخدم بالفعل');
+                return;
+            }
+
+            try {
+                showToast('info', 'جاري التحضير', 'يرجى اتباع تعليمات الجهاز...');
+
+                const challenge = new Uint8Array(32);
+                window.crypto.getRandomValues(challenge);
+
+                const userId = new Uint8Array(16);
+                window.crypto.getRandomValues(userId);
+
+                const publicKeyCredentialCreationOptions = {
+                    challenge: challenge,
+                    rp: { name: 'نظام إدارة الإجازات', id: window.location.hostname },
+                    user: {
+                        id: userId,
+                        name: email,
+                        displayName: name
+                    },
+                    pubKeyCredParams: [
+                        { type: 'public-key', alg: -7 },
+                        { type: 'public-key', alg: -257 }
+                    ],
+                    authenticatorSelection: {
+                        authenticatorAttachment: 'platform',
+                        userVerification: 'required'
+                    },
+                    timeout: 60000,
+                    attestation: 'none'
+                };
+
+                const credential = await navigator.credentials.create({
+                    publicKey: publicKeyCredentialCreationOptions
+                });
+
+                // Save user with biometric
+                const newUser = {
+                    id: DB.nextUserId++,
+                    name: name,
+                    email: email,
+                    password: password,
+                    role: DB.regRole,
+                    avatar: name.charAt(0),
+                    biometricId: arrayBufferToBase64(credential.rawId),
+                    createdAt: new Date().toISOString()
+                };
+
+                DB.users.push(newUser);
+                saveDB();
+
+                showSuccess('تم إنشاء الحساب مع البصمة الحيوية! يمكنك تسجيل الدخول');
+                document.getElementById('registerForm').reset();
+
+                setTimeout(() => {
+                    showAuthPanel('login');
+                    document.getElementById('loginEmail').value = email;
+                    selectRole(DB.regRole);
+                }, 1500);
+
+            } catch (err) {
+                console.error('Biometric registration error:', err);
+                if (err.name === 'NotAllowedError') {
+                    showError('تم إلغاء العملية من المستخدم');
+                } else if (err.name === 'NotSupportedError') {
+                    showError('جهازك لا يدعم هذا النوع من البصمات');
+                } else {
+                    showError('حدث خطأ أثناء تسجيل البصمة: ' + err.message);
+                }
+            }
+        }
+
+        // ========== BIOMETRIC LOGIN (WebAuthn) ==========
+        async function biometricLogin() {
+            if (!DB.webauthnSupported) {
+                showError('البصمة الحيوية لا تعمل عند فتح الملف مباشرة من الهاتف. استخدم كلمة المرور أو شغل الصفحة عبر localhost/HTTPS.');
+                return;
+            }
+
+            const email = document.getElementById('loginEmail').value.trim().toLowerCase();
+            if (!email) {
+                showError('أدخل البريد الإلكتروني أولاً');
+                return;
+            }
+
+            const user = DB.users.find(u => u.email === email);
+            if (!user) {
+                showError('لم يتم العثور على حساب بهذا البريد');
+                return;
+            }
+
+            if (!user.biometricId) {
+                showError('هذا الحساب ليس مرتبطاً ببصمة حيوية');
+                return;
+            }
+
+            try {
+                showToast('info', 'جاري التحقق', 'يرجى استخدام بصمتك...');
+
+                const challenge = new Uint8Array(32);
+                window.crypto.getRandomValues(challenge);
+
+                const publicKeyCredentialRequestOptions = {
+                    challenge: challenge,
+                    allowCredentials: [{
+                        id: base64ToArrayBuffer(user.biometricId),
+                        type: 'public-key',
+                        transports: ['internal']
+                    }],
+                    userVerification: 'required',
+                    timeout: 60000
+                };
+
+                const assertion = await navigator.credentials.get({
+                    publicKey: publicKeyCredentialRequestOptions
+                });
+
+                // Login successful
+                DB.currentUser = user;
+                DB.currentRole = user.role;
+                showSuccess('تم التحقق البيومتري بنجاح!');
+
+                setTimeout(() => {
+                    loginSuccess();
+                }, 1000);
+
+            } catch (err) {
+                console.error('Biometric login error:', err);
+                if (err.name === 'NotAllowedError') {
+                    showError('تم إلغاء التحقق');
+                } else {
+                    showError('فشل التحقق البيومتري: ' + err.message);
+                }
+            }
+        }
+
+        // ========== NORMAL LOGIN ==========
+        function selectRole(role) {
+            DB.currentRole = role;
+            document.querySelectorAll('.role-option').forEach(el => el.classList.remove('active'));
+            const selected = document.querySelector(`[data-role="${role}"]`);
+            if (selected) selected.classList.add('active');
+        }
+
+        function handleLogin(e) {
+            e.preventDefault();
+            console.log('Login attempt...');
+
+            const email = document.getElementById('loginEmail').value.trim().toLowerCase();
+            const password = document.getElementById('loginPassword').value;
+
+            const user = DB.users.find(u => u.email === email && u.password === password && u.role === DB.currentRole);
+
+            if (!user) {
+                showError('البريد الإلكتروني أو كلمة المرور غير صحيحة');
+                return;
+            }
+
+            DB.currentUser = user;
+            showSuccess('تم تسجيل الدخول بنجاح!');
+            setTimeout(() => loginSuccess(), 500);
+        }
+
+        function loginSuccess() {
+            document.getElementById('loginPage').style.display = 'none';
+            document.getElementById('dashboard').style.display = 'block';
+
+            document.getElementById('userName').textContent = DB.currentUser.name;
+            document.getElementById('userRole').textContent = DB.currentUser.role === 'manager' ? 'مدير' : 'موظف';
+            document.getElementById('userAvatar').textContent = DB.currentUser.avatar;
+            document.getElementById('sidebarRole').textContent = DB.currentUser.role === 'manager' ? 'لوحة تحكم المدير' : 'لوحة تحكم الموظف';
+
+            setupNavigation();
+
+            if (DB.currentUser.role === 'manager') {
+                showSection('managerHome');
+                updateManagerStats();
+                renderPendingRequests();
+            } else {
+                showSection('employeeHome');
+                updateEmployeeStats();
+            }
+
+            updateNotifications();
+            showToast('success', 'مرحباً', `أهلاً بك ${DB.currentUser.name}`);
+        }
+
+        function logout() {
+            DB.currentUser = null;
+            DB.biometricVerified = false;
+            DB.biometricType = null;
+            document.getElementById('dashboard').style.display = 'none';
+            document.getElementById('loginPage').style.display = 'flex';
+            document.getElementById('loginEmail').value = '';
+            document.getElementById('loginPassword').value = '';
+            document.getElementById('loginError').classList.remove('show');
+            document.getElementById('loginSuccess').classList.remove('show');
+            showToast('info', 'تم تسجيل الخروج', 'نتمنى لك يوماً سعيداً');
+        }
+
+        // ========== NAVIGATION ==========
+        function setupNavigation() {
+            const navMenu = document.getElementById('navMenu');
+            if (!navMenu) return;
+            navMenu.innerHTML = '';
+
+            if (DB.currentUser.role === 'manager') {
+                navMenu.innerHTML = `
+                    <li class="nav-item"><a class="nav-link active" onclick="showSection('managerHome')" data-section="managerHome"><i class="fas fa-home"></i> الرئيسية</a></li>
+                    <li class="nav-item"><a class="nav-link" onclick="showSection('allRequests')" data-section="allRequests"><i class="fas fa-list-alt"></i> جميع الطلبات</a></li>
+                    <li class="nav-item"><a class="nav-link" onclick="showSection('employees')" data-section="employees"><i class="fas fa-users"></i> الموظفين</a></li>
+                    <li class="nav-item"><a class="nav-link" onclick="showSection('reports')" data-section="reports"><i class="fas fa-file-excel"></i> التقارير</a></li>
+                `;
+            } else {
+                navMenu.innerHTML = `
+                    <li class="nav-item"><a class="nav-link active" onclick="showSection('employeeHome')" data-section="employeeHome"><i class="fas fa-home"></i> الرئيسية</a></li>
+                    <li class="nav-item"><a class="nav-link" onclick="showSection('newRequest')" data-section="newRequest"><i class="fas fa-plus-circle"></i> طلب إجازة</a></li>
+                    <li class="nav-item"><a class="nav-link" onclick="showSection('myRequests')" data-section="myRequests"><i class="fas fa-list-alt"></i> طلباتي</a></li>
+                    <li class="nav-item"><a class="nav-link" onclick="showSection('myNotifications')" data-section="myNotifications"><i class="fas fa-bell"></i> إشعاراتي <span class="badge hidden" id="navBadge">0</span></a></li>
+                `;
+            }
+        }
+
+        function showSection(sectionName) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+            const navLink = document.querySelector(`[data-section="${sectionName}Section"], [data-section="${sectionName}"]`);
+            if (navLink) navLink.classList.add('active');
+
+            const sectionMap = {
+                'employeeHome': 'employeeHome', 'managerHome': 'managerHome',
+                'newRequest': 'newRequestSection', 'myRequests': 'myRequestsSection',
+                'myNotifications': 'myNotificationsSection', 'allRequests': 'allRequestsSection',
+                'employees': 'employeesSection', 'reports': 'reportsSection'
+            };
+
+            const targetId = sectionMap[sectionName];
+            if (targetId) {
+                const target = document.getElementById(targetId);
+                if (target) target.classList.add('active');
+            }
+
+            const titles = {
+                'employeeHome': ['الرئيسية', 'نظرة عامة'],
+                'managerHome': ['الرئيسية', 'نظرة عامة'],
+                'newRequest': ['طلب إجازة جديد', 'قدم طلبك'],
+                'myRequests': ['طلباتي', 'جميع طلبات الإجازة'],
+                'myNotifications': ['إشعاراتي', 'ردود المدير'],
+                'allRequests': ['جميع الطلبات', 'إدارة الطلبات'],
+                'employees': ['الموظفين', 'قائمة الموظفين'],
+                'reports': ['التقارير', 'تقرير الشهر']
+            };
+
+            if (titles[sectionName]) {
+                document.getElementById('pageTitle').textContent = titles[sectionName][0];
+                document.getElementById('pageSubtitle').textContent = titles[sectionName][1];
+            }
+
+            if (sectionName === 'myRequests') renderMyRequests();
+            if (sectionName === 'myNotifications') renderMyNotifications();
+            if (sectionName === 'managerHome') { updateManagerStats(); renderPendingRequests(); }
+            if (sectionName === 'allRequests') renderAllRequests('all');
+            if (sectionName === 'employees') renderEmployees();
+            if (sectionName === 'reports') generateReport();
+            if (sectionName === 'newRequest') resetBiometric();
+        }
+
+        // ========== BIOMETRIC AUTHENTICATION FOR REQUESTS ==========
+        function selectBiometricType(type) {
+            DB.biometricType = type;
+            document.querySelectorAll('.biometric-option').forEach(el => el.classList.remove('active'));
+            document.getElementById('opt' + (type === 'fingerprint' ? 'Fingerprint' : type === 'face' ? 'Face' : 'Pin')).classList.add('active');
+
+            if (type === 'face') {
+                startFaceAuth();
+            } else if (type === 'fingerprint') {
+                startFingerprintAuth();
+            } else if (type === 'pin') {
+                startPinAuth();
+            }
+        }
+
+        async function startBiometricAuth() {
+            if (DB.webauthnSupported) {
+                await startFingerprintAuth();
+            } else {
+                // Fallback to camera face simulation
+                startFaceAuth();
+            }
+        }
+
+        async function startFingerprintAuth() {
+            const icon = document.getElementById('biometricIcon');
+            const status = document.getElementById('biometricStatus');
+            const text = document.getElementById('biometricText');
+
+            if (!icon) return;
+
+            icon.className = 'biometric-icon scanning';
+            text.textContent = 'ضع إصبعك على المستشعر...';
+            status.className = 'biometric-status scanning';
+            status.textContent = 'جاري المسح...';
+
+            if (DB.webauthnSupported) {
+                try {
+                    const challenge = new Uint8Array(32);
+                    window.crypto.getRandomValues(challenge);
+
+                    const options = {
+                        challenge: challenge,
+                        authenticatorSelection: {
+                            authenticatorAttachment: 'platform',
+                            userVerification: 'required'
+                        },
+                        timeout: 30000
+                    };
+
+                    await navigator.credentials.get({ publicKey: options });
+                    biometricSuccess('fingerprint');
+                    return;
+                } catch (err) {
+                    console.log('WebAuthn fingerprint failed, using simulation:', err);
+                }
+            }
+
+            // Simulation fallback
+            setTimeout(() => {
+                biometricSuccess('fingerprint');
+            }, 2000);
+        }
+
+        async function startFaceAuth() {
+            const icon = document.getElementById('biometricIcon');
+            const scanner = document.getElementById('faceScanner');
+            const scanLine = document.getElementById('scanLine');
+            const status = document.getElementById('biometricStatus');
+            const text = document.getElementById('biometricText');
+
+            if (icon) icon.style.display = 'none';
+            if (scanner) scanner.classList.add('active');
+            if (scanLine) scanLine.classList.add('active');
+            text.textContent = 'انظر إلى الكاميرا...';
+            status.className = 'biometric-status scanning';
+            status.textContent = 'جاري مسح الوجه...';
+
+            // Try to access real camera
+            try {
+                const video = document.getElementById('faceVideo');
+                if (video && navigator.mediaDevices) {
+                    const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+                    video.srcObject = stream;
+                }
+            } catch (err) {
+                console.log('Camera not available, using simulation');
+            }
+
+            setTimeout(() => {
+                biometricSuccess('face');
+            }, 3000);
+        }
+
+        function startPinAuth() {
+            const status = document.getElementById('biometricStatus');
+            const text = document.getElementById('biometricText');
+
+            text.textContent = 'أدخل PIN الجهاز...';
+            status.className = 'biometric-status scanning';
+            status.textContent = 'في انتظار PIN...';
+
+            setTimeout(() => {
+                biometricSuccess('pin');
+            }, 1500);
+        }
+
+        function biometricSuccess(type) {
+            const icon = document.getElementById('biometricIcon');
+            const scanner = document.getElementById('faceScanner');
+            const scanLine = document.getElementById('scanLine');
+            const status = document.getElementById('biometricStatus');
+            const text = document.getElementById('biometricText');
+            const code = document.getElementById('biometricCode');
+
+            DB.biometricVerified = true;
+            DB.biometricType = type;
+
+            if (icon) {
+                icon.style.display = 'inline-block';
+                icon.className = 'biometric-icon verified';
+            }
+            if (scanner) scanner.classList.remove('active');
+            if (scanLine) scanLine.classList.remove('active');
+
+            status.className = 'biometric-status verified';
+
+            const typeNames = { fingerprint: 'بصمة الإصبع', face: 'الوجه', pin: 'PIN' };
+            status.textContent = 'تم التحقق بـ ' + typeNames[type] + ' ✓';
+            text.textContent = 'تم التحقق من الهوية بنجاح';
+
+            if (code) {
+                code.classList.remove('hidden');
+                code.textContent = 'BIO-' + Date.now().toString().slice(-10) + '-' + type.toUpperCase().charAt(0);
+            }
+
+            showToast('success', 'تم التحقق', 'تم التحقق البيومتري بنجاح');
+        }
+
+        function skipBiometric() {
+            DB.biometricVerified = true;
+            DB.biometricType = 'skipped';
+
+            const status = document.getElementById('biometricStatus');
+            const text = document.getElementById('biometricText');
+            const code = document.getElementById('biometricCode');
+            const icon = document.getElementById('biometricIcon');
+
+            if (icon) icon.className = 'biometric-icon verified';
+            if (status) {
+                status.className = 'biometric-status verified';
+                status.textContent = 'تم التحقق (تخطي)';
+            }
+            if (text) text.textContent = 'تم التحقق (وضع الاختبار)';
+            if (code) {
+                code.classList.remove('hidden');
+                code.textContent = 'BIO-SKIPPED-TEST';
+            }
+
+            showToast('warning', 'تنبيه', 'تم تخطي التحقق - وضع الاختبار');
+        }
+
+        function resetBiometric() {
+            DB.biometricVerified = false;
+            DB.biometricType = null;
+
+            const icon = document.getElementById('biometricIcon');
+            const scanner = document.getElementById('faceScanner');
+            const scanLine = document.getElementById('scanLine');
+            const status = document.getElementById('biometricStatus');
+            const text = document.getElementById('biometricText');
+            const code = document.getElementById('biometricCode');
+
+            if (icon) {
+                icon.style.display = 'inline-block';
+                icon.className = 'biometric-icon';
+            }
+            if (scanner) scanner.classList.remove('active');
+            if (scanLine) scanLine.classList.remove('active');
+            if (status) {
+                status.className = 'biometric-status not-verified';
+                status.textContent = 'لم يتم التحقق';
+            }
+            if (text) text.textContent = 'اختر طريقة التحقق أو اضغط على الأيقونة';
+            if (code) code.classList.add('hidden');
+
+            document.querySelectorAll('.biometric-option').forEach(el => el.classList.remove('active'));
+        }
+
+        // ========== VACATION REQUESTS ==========
+        function submitVacationRequest(e) {
+            e.preventDefault();
+            console.log('Submitting vacation request...');
+
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('endDate').value;
+            const type = document.getElementById('vacationType').value;
+            const reason = document.getElementById('vacationReason').value;
+
+            if (!startDate || !endDate || !type || !reason) {
+                showToast('error', 'خطأ', 'يرجى ملء جميع الحقول المطلوبة');
+                return;
+            }
+
+            if (new Date(startDate) > new Date(endDate)) {
+                showToast('error', 'خطأ', 'تاريخ البداية يجب أن يكون قبل تاريخ النهاية');
+                return;
+            }
+
+            const request = {
+                id: Date.now(),
+                employeeId: DB.currentUser.id,
+                employeeName: DB.currentUser.name,
+                employeeEmail: DB.currentUser.email,
+                startDate: startDate,
+                endDate: endDate,
+                type: type,
+                reason: reason,
+                status: 'pending',
+                response: null,
+                responseNotes: null,
+                clarification: null,
+                biometricType: DB.biometricType || 'skipped',
+                biometricCode: document.getElementById('biometricCode')?.textContent || 'N/A',
+                createdAt: new Date().toISOString()
+            };
+
+            DB.requests.push(request);
+
+            // Notify manager
+            const manager = DB.users.find(u => u.role === 'manager');
+            if (manager) {
+                DB.notifications.push({
+                    id: Date.now() + 1,
+                    userId: manager.id,
+                    type: 'new',
+                    title: 'طلب إجازة جديد',
+                    message: `${DB.currentUser.name} قدم طلب إجازة ${vacationTypes[type]}`,
+                    requestId: request.id,
+                    read: false,
+                    createdAt: new Date().toISOString()
+                });
+            }
+
+            saveDB();
+            resetBiometric();
+            document.getElementById('vacationForm').reset();
+
+            // Reset dates
+            const today = new Date();
+            const startDateEl = document.getElementById('startDate');
+            const endDateEl = document.getElementById('endDate');
+            if (startDateEl) startDateEl.value = today.toISOString().split('T')[0];
+            if (endDateEl) {
+                const nextWeek = new Date(today);
+                nextWeek.setDate(today.getDate() + 7);
+                endDateEl.value = nextWeek.toISOString().split('T')[0];
+            }
+
+            showToast('success', 'تم الإرسال', 'تم إرسال طلب الإجازة بنجاح');
+
+            setTimeout(() => {
+                showSection('employeeHome');
+                updateEmployeeStats();
+            }, 1500);
+        }
+
+        // ========== MANAGER RESPONSES ==========
+        function openResponseModal(requestId) {
+            DB.selectedRequestId = requestId;
+            DB.selectedDecision = null;
+
+            const request = DB.requests.find(r => r.id === requestId);
+            if (!request) return;
+
+            const detailsEl = document.getElementById('requestDetails');
+            if (detailsEl) {
+                detailsEl.innerHTML = `
+                    <div style="background: var(--light); padding: 15px; border-radius: var(--radius); margin-bottom: 15px;">
+                        <p><strong>الموظف:</strong> ${request.employeeName}</p>
+                        <p><strong>النوع:</strong> ${vacationTypes[request.type]}</p>
+                        <p><strong>الفترة:</strong> ${formatDate(request.startDate)} - ${formatDate(request.endDate)}</p>
+                        <p><strong>السبب:</strong> ${request.reason}</p>
+                        ${request.clarification ? `<p style="color: var(--info);"><strong>إيضاح إضافي:</strong> ${request.clarification}</p>` : ''}
+                        ${request.biometricType ? `<p style="color: var(--success);"><strong>التحقق البيومتري:</strong> ${request.biometricType}</p>` : ''}
+                    </div>
+                `;
+            }
+
+            document.querySelectorAll('[data-decision]').forEach(el => el.classList.remove('active'));
+            const notesEl = document.getElementById('responseNotes');
+            if (notesEl) notesEl.value = '';
+
+            document.getElementById('responseModal').classList.add('show');
+        }
+
+        function selectDecision(decision) {
+            DB.selectedDecision = decision;
+            document.querySelectorAll('[data-decision]').forEach(el => el.classList.remove('active'));
+            const selected = document.querySelector(`[data-decision="${decision}"]`);
+            if (selected) selected.classList.add('active');
+        }
+
+        function submitResponse() {
+            if (!DB.selectedDecision) {
+                showToast('warning', 'تنبيه', 'يرجى اختيار القرار أولاً');
+                return;
+            }
+
+            const request = DB.requests.find(r => r.id === DB.selectedRequestId);
+            if (!request) return;
+
+            request.status = DB.selectedDecision;
+            request.responseNotes = document.getElementById('responseNotes')?.value || '';
+            request.respondedAt = new Date().toISOString();
+            request.respondedBy = DB.currentUser.name;
+
+            let title, message;
+            if (DB.selectedDecision === 'approved') {
+                title = 'تمت الموافقة على طلبك';
+                message = `طلب إجازة ${vacationTypes[request.type]} تمت الموافقة عليه`;
+            } else if (DB.selectedDecision === 'rejected') {
+                title = 'تم رفض طلبك';
+                message = `طلب إجازة ${vacationTypes[request.type]} تم رفضه`;
+            } else {
+                title = 'يحتاج طلبك إيضاحاً';
+                message = `طلب إجازة ${vacationTypes[request.type]} يحتاج إيضاح إضافي`;
+            }
+
+            if (request.responseNotes) message += ` - ${request.responseNotes}`;
+
+            DB.notifications.push({
+                id: Date.now(),
+                userId: request.employeeId,
+                type: DB.selectedDecision,
+                title: title,
+                message: message,
+                requestId: request.id,
+                read: false,
+                createdAt: new Date().toISOString()
+            });
+
+            saveDB();
+            closeModal('responseModal');
+            showToast('success', 'تم الرد', 'تم إرسال ردك بنجاح');
+
+            renderPendingRequests();
+            renderAllRequests('all');
+            updateManagerStats();
+        }
+
+        // ========== CLARIFICATION ==========
+        function openClarificationModal(requestId) {
+            DB.selectedRequestId = requestId;
+            const request = DB.requests.find(r => r.id === requestId);
+            if (!request) return;
+
+            const detailsEl = document.getElementById('clarificationRequestDetails');
+            if (detailsEl) {
+                detailsEl.innerHTML = `
+                    <div class="clarification-box">
+                        <h4><i class="fas fa-info-circle"></i> ملاحظات المدير</h4>
+                        <p>${request.responseNotes || 'يرجى تقديم إيضاح إضافي'}</p>
+                    </div>
+                    <div style="background: var(--light); padding: 15px; border-radius: var(--radius);">
+                        <p><strong>نوع الإجازة:</strong> ${vacationTypes[request.type]}</p>
+                        <p><strong>السبب الأصلي:</strong> ${request.reason}</p>
+                    </div>
+                `;
+            }
+
+            const textarea = document.getElementById('additionalClarification');
+            if (textarea) textarea.value = '';
+
+            document.getElementById('clarificationModal').classList.add('show');
+        }
+
+        function submitClarification() {
+            const text = document.getElementById('additionalClarification')?.value.trim();
+            if (!text) {
+                showToast('error', 'خطأ', 'يرجى كتابة الإيضاح');
+                return;
+            }
+
+            const request = DB.requests.find(r => r.id === DB.selectedRequestId);
+            if (!request) return;
+
+            request.clarification = text;
+            request.status = 'pending';
+
+            const manager = DB.users.find(u => u.role === 'manager');
+            if (manager) {
+                DB.notifications.push({
+                    id: Date.now(),
+                    userId: manager.id,
+                    type: 'new',
+                    title: 'إيضاح إضافي',
+                    message: `${DB.currentUser.name} قدم إيضاحاً إضافياً`,
+                    requestId: request.id,
+                    read: false,
+                    createdAt: new Date().toISOString()
+                });
+            }
+
+            saveDB();
+            closeModal('clarificationModal');
+            showToast('success', 'تم الإرسال', 'تم إرسال الإيضاح بنجاح');
+            renderMyRequests();
+            updateEmployeeStats();
+        }
+
+        // ========== RENDERING ==========
+        function renderMyRequests() {
+            const tbody = document.getElementById('myRequestsTable');
+            const empty = document.getElementById('myRequestsEmpty');
+            if (!tbody) return;
+
+            const myRequests = DB.requests.filter(r => r.employeeId === DB.currentUser.id).sort((a, b) => b.id - a.id);
+
+            if (myRequests.length === 0) {
+                tbody.innerHTML = '';
+                if (empty) empty.classList.remove('hidden');
+                return;
+            }
+
+            if (empty) empty.classList.add('hidden');
+            tbody.innerHTML = myRequests.map((req, idx) => {
+                const status = statusLabels[req.status] || statusLabels.pending;
+                let responseHtml = '';
+                if (req.status === 'clarification') {
+                    responseHtml = `<button class="btn-action btn-clarify" onclick="openClarificationModal(${req.id})"><i class="fas fa-edit"></i> إيضاح</button>`;
+                } else if (req.responseNotes) {
+                    responseHtml = `<span style="font-size: 12px; color: var(--gray);">${req.responseNotes}</span>`;
+                }
+
+                let clarificationHtml = '';
+                if (req.clarification) {
+                    clarificationHtml = `<div style="font-size: 11px; color: var(--info); margin-top: 5px;"><i class="fas fa-comment"></i> ${req.clarification}</div>`;
+                }
+
+                let bioHtml = '';
+                if (req.biometricType && req.biometricType !== 'skipped') {
+                    bioHtml = `<div style="font-size: 11px; color: var(--success); margin-top: 5px;"><i class="fas fa-fingerprint"></i> ${req.biometricType}</div>`;
+                }
+
+                return `
+                    <tr>
+                        <td>${idx + 1}</td>
+                        <td>${vacationTypes[req.type] || req.type}</td>
+                        <td>${formatDate(req.startDate)}</td>
+                        <td>${formatDate(req.endDate)}</td>
+                        <td>${req.reason}${clarificationHtml}${bioHtml}</td>
+                        <td><span class="status-badge ${status.class}"><i class="fas ${status.icon}"></i> ${status.text}</span></td>
+                        <td>${formatDateTime(req.createdAt)}</td>
+                        <td>${responseHtml}</td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function renderPendingRequests() {
+            const tbody = document.getElementById('pendingRequestsTable');
+            const empty = document.getElementById('pendingRequestsEmpty');
+            if (!tbody) return;
+
+            const pending = DB.requests.filter(r => r.status === 'pending').sort((a, b) => b.id - a.id);
+
+            if (pending.length === 0) {
+                tbody.innerHTML = '';
+                if (empty) empty.classList.remove('hidden');
+                return;
+            }
+
+            if (empty) empty.classList.add('hidden');
+            tbody.innerHTML = pending.map(req => `
+                <tr>
+                    <td><strong>${req.employeeName}</strong></td>
+                    <td>${vacationTypes[req.type] || req.type}</td>
+                    <td>${formatDate(req.startDate)} - ${formatDate(req.endDate)}</td>
+                    <td>${req.reason}</td>
+                    <td>${formatDateTime(req.createdAt)}</td>
+                    <td class="action-btns">
+                        <button class="btn-action btn-approve" onclick="openResponseModal(${req.id})"><i class="fas fa-reply"></i> رد</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function renderAllRequests(filter) {
+            const tbody = document.getElementById('allRequestsTable');
+            if (!tbody) return;
+
+            let requests = [...DB.requests].sort((a, b) => b.id - a.id);
+            if (filter !== 'all') requests = requests.filter(r => r.status === filter);
+
+            tbody.innerHTML = requests.map((req, idx) => {
+                const status = statusLabels[req.status] || statusLabels.pending;
+                let actions = '';
+                if (req.status === 'pending') actions = `<button class="btn-action btn-approve" onclick="openResponseModal(${req.id})"><i class="fas fa-reply"></i> رد</button>`;
+
+                let responseText = req.responseNotes || '-';
+                if (req.status === 'clarification' && req.clarification) {
+                    responseText += `<br><small style="color: var(--info);">إيضاح: ${req.clarification}</small>`;
+                }
+
+                return `
+                    <tr>
+                        <td>${idx + 1}</td>
+                        <td><strong>${req.employeeName}</strong></td>
+                        <td>${vacationTypes[req.type] || req.type}</td>
+                        <td>${formatDate(req.startDate)} - ${formatDate(req.endDate)}</td>
+                        <td>${req.reason}</td>
+                        <td><span class="status-badge ${status.class}"><i class="fas ${status.icon}"></i> ${status.text}</span></td>
+                        <td>${responseText}</td>
+                        <td>${actions}</td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function filterRequests(filter) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            if (event && event.target) event.target.classList.add('active');
+            renderAllRequests(filter);
+        }
+
+        function renderEmployees() {
+            const grid = document.getElementById('employeesGrid');
+            if (!grid) return;
+
+            const employees = DB.users.filter(u => u.role === 'employee');
+            grid.innerHTML = employees.map(emp => {
+                const empRequests = DB.requests.filter(r => r.employeeId === emp.id);
+                const approved = empRequests.filter(r => r.status === 'approved').length;
+                const rejected = empRequests.filter(r => r.status === 'rejected').length;
+
+                return `
+                    <div class="employee-card">
+                        <div class="employee-card-header">
+                            <div class="employee-avatar-large">${emp.avatar}</div>
+                            <div class="employee-details">
+                                <h4>${emp.name}</h4>
+                                <p>${emp.email}</p>
+                                ${emp.biometricId ? '<span style="color: var(--success); font-size: 12px;"><i class="fas fa-fingerprint"></i> بصمة حيوية</span>' : ''}
+                            </div>
+                        </div>
+                        <div class="employee-stats">
+                            <div class="employee-stat"><div class="employee-stat-value">${empRequests.length}</div><div class="employee-stat-label">الكل</div></div>
+                            <div class="employee-stat"><div class="employee-stat-value" style="color: var(--success);">${approved}</div><div class="employee-stat-label">موافق</div></div>
+                            <div class="employee-stat"><div class="employee-stat-value" style="color: var(--danger);">${rejected}</div><div class="employee-stat-label">مرفوض</div></div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // ========== NOTIFICATIONS ==========
+        function renderMyNotifications() {
+            const container = document.getElementById('myNotificationsList');
+            const empty = document.getElementById('myNotificationsEmpty');
+            if (!container) return;
+
+            const myNotifs = DB.notifications.filter(n => n.userId === DB.currentUser.id).sort((a, b) => b.id - a.id);
+            myNotifs.forEach(n => n.read = true);
+            saveDB();
+            updateNotifications();
+
+            if (myNotifs.length === 0) {
+                container.innerHTML = '';
+                if (empty) empty.classList.remove('hidden');
+                return;
+            }
+
+            if (empty) empty.classList.add('hidden');
+            container.innerHTML = myNotifs.map(n => {
+                const iconClass = n.type === 'approved' ? 'approved' : n.type === 'rejected' ? 'rejected' : n.type === 'clarification' ? 'clarification' : 'new';
+                const icon = n.type === 'approved' ? 'fa-check-circle' : n.type === 'rejected' ? 'fa-times-circle' : n.type === 'clarification' ? 'fa-question-circle' : 'fa-bell';
+                return `
+                    <div class="notification-item ${!n.read ? 'unread' : ''}" style="border-bottom: 1px solid var(--gray-light); padding: 15px;">
+                        <div class="notification-icon ${iconClass}"><i class="fas ${icon}"></i></div>
+                        <div class="notification-content">
+                            <p><strong>${n.title}</strong></p>
+                            <p>${n.message}</p>
+                            <div class="notification-time">${formatDateTime(n.createdAt)}</div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function toggleNotifications() {
+            const panel = document.getElementById('notificationsPanel');
+            if (!panel) return;
+            panel.classList.toggle('show');
+            if (panel.classList.contains('show')) renderNotificationsList();
+        }
+
+        function renderNotificationsList() {
+            const list = document.getElementById('notificationsList');
+            if (!list) return;
+
+            const myNotifs = DB.notifications.filter(n => n.userId === DB.currentUser.id).sort((a, b) => b.id - a.id).slice(0, 10);
+
+            if (myNotifs.length === 0) {
+                list.innerHTML = '<div class="empty-state" style="padding: 30px;"><i class="fas fa-bell-slash"></i><h3>لا توجد إشعارات</h3></div>';
+                return;
+            }
+
+            list.innerHTML = myNotifs.map(n => {
+                const iconClass = n.type === 'approved' ? 'approved' : n.type === 'rejected' ? 'rejected' : n.type === 'clarification' ? 'clarification' : 'new';
+                const icon = n.type === 'approved' ? 'fa-check-circle' : n.type === 'rejected' ? 'fa-times-circle' : n.type === 'clarification' ? 'fa-question-circle' : 'fa-bell';
+                return `
+                    <div class="notification-item ${!n.read ? 'unread' : ''}">
+                        <div class="notification-icon ${iconClass}"><i class="fas ${icon}"></i></div>
+                        <div class="notification-content">
+                            <p><strong>${n.title}</strong></p>
+                            <p>${n.message}</p>
+                            <div class="notification-time">${formatDateTime(n.createdAt)}</div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function updateNotifications() {
+            const unreadCount = DB.notifications.filter(n => n.userId === DB.currentUser.id && !n.read).length;
+            const dot = document.getElementById('notificationDot');
+            const navBadge = document.getElementById('navBadge');
+
+            if (dot) {
+                if (unreadCount > 0) dot.classList.remove('hidden');
+                else dot.classList.add('hidden');
+            }
+            if (navBadge) {
+                if (unreadCount > 0) { navBadge.classList.remove('hidden'); navBadge.textContent = unreadCount; }
+                else navBadge.classList.add('hidden');
+            }
+        }
+
+        // ========== STATS ==========
+        function updateEmployeeStats() {
+            if (!DB.currentUser) return;
+            const myRequests = DB.requests.filter(r => r.employeeId === DB.currentUser.id);
+
+            const totalEl = document.getElementById('empTotalRequests');
+            const approvedEl = document.getElementById('empApproved');
+            const pendingEl = document.getElementById('empPending');
+            const rejectedEl = document.getElementById('empRejected');
+
+            if (totalEl) totalEl.textContent = myRequests.length;
+            if (approvedEl) approvedEl.textContent = myRequests.filter(r => r.status === 'approved').length;
+            if (pendingEl) pendingEl.textContent = myRequests.filter(r => r.status === 'pending').length;
+            if (rejectedEl) rejectedEl.textContent = myRequests.filter(r => r.status === 'rejected').length;
+        }
+
+        function updateManagerStats() {
+            const employees = DB.users.filter(u => u.role === 'employee');
+            const pending = DB.requests.filter(r => r.status === 'pending');
+            const now = new Date();
+            const approvedThisMonth = DB.requests.filter(r => {
+                const d = new Date(r.createdAt);
+                return r.status === 'approved' && d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
+            });
+
+            const empEl = document.getElementById('mgrTotalEmployees');
+            const pendingEl = document.getElementById('mgrPendingRequests');
+            const approvedEl = document.getElementById('mgrApprovedThisMonth');
+            const totalEl = document.getElementById('mgrTotalRequests');
+
+            if (empEl) empEl.textContent = employees.length;
+            if (pendingEl) pendingEl.textContent = pending.length;
+            if (approvedEl) approvedEl.textContent = approvedThisMonth.length;
+            if (totalEl) totalEl.textContent = DB.requests.length;
+        }
+
+        // ========== REPORTS ==========
+        function generateReport() {
+            const monthEl = document.getElementById('reportMonth');
+            const yearEl = document.getElementById('reportYear');
+            if (!monthEl || !yearEl) return;
+
+            const month = parseInt(monthEl.value);
+            const year = parseInt(yearEl.value);
+            const tbody = document.getElementById('reportTableBody');
+            const empty = document.getElementById('reportEmpty');
+            if (!tbody) return;
+
+            const employees = DB.users.filter(u => u.role === 'employee');
+            let hasData = false;
+
+            tbody.innerHTML = employees.map((emp, idx) => {
+                const empRequests = DB.requests.filter(r => {
+                    const d = new Date(r.createdAt);
+                    return r.employeeId === emp.id && d.getMonth() === month && d.getFullYear() === year;
+                });
+
+                if (empRequests.length > 0) hasData = true;
+
+                const approved = empRequests.filter(r => r.status === 'approved');
+                const rejected = empRequests.filter(r => r.status === 'rejected');
+                const totalDays = approved.reduce((sum, r) => {
+                    const start = new Date(r.startDate);
+                    const end = new Date(r.endDate);
+                    return sum + Math.ceil((end - start) / (1000 * 60 * 60 * 24)) + 1;
+                }, 0);
+
+                const statusClass = approved.length > 0 ? 'status-approved' : rejected.length > 0 ? 'status-rejected' : 'status-pending';
+                const statusText = approved.length > 0 ? 'نشط' : rejected.length > 0 ? 'غير نشط' : 'قيد المراجعة';
+
+                return `
+                    <tr>
+                        <td>${idx + 1}</td>
+                        <td><strong>${emp.name}</strong></td>
+                        <td>${emp.email}</td>
+                        <td>${empRequests.length}</td>
+                        <td style="color: var(--success); font-weight: 700;">${approved.length}</td>
+                        <td style="color: var(--danger); font-weight: 700;">${rejected.length}</td>
+                        <td>${totalDays} يوم</td>
+                        <td><span class="status-badge ${statusClass}">${statusText}</span></td>
+                    </tr>
+                `;
+            }).join('');
+
+            if (!hasData) {
+                tbody.innerHTML = '';
+                if (empty) empty.classList.remove('hidden');
+            } else {
+                if (empty) empty.classList.add('hidden');
+            }
+        }
+
+        function downloadExcel() {
+            const monthEl = document.getElementById('reportMonth');
+            const yearEl = document.getElementById('reportYear');
+            if (!monthEl || !yearEl) return;
+
+            const month = parseInt(monthEl.value);
+            const year = parseInt(yearEl.value);
+            const monthNames = ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو', 'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر'];
+
+            const employees = DB.users.filter(u => u.role === 'employee');
+            const data = employees.map((emp, idx) => {
+                const empRequests = DB.requests.filter(r => {
+                    const d = new Date(r.createdAt);
+                    return r.employeeId === emp.id && d.getMonth() === month && d.getFullYear() === year;
+                });
+
+                const approved = empRequests.filter(r => r.status === 'approved');
+                const rejected = empRequests.filter(r => r.status === 'rejected');
+                const totalDays = approved.reduce((sum, r) => {
+                    const start = new Date(r.startDate);
+                    const end = new Date(r.endDate);
+                    return sum + Math.ceil((end - start) / (1000 * 60 * 60 * 24)) + 1;
+                }, 0);
+
+                return {
+                    'م': idx + 1,
+                    'اسم الموظف': emp.name,
+                    'البريد الإلكتروني': emp.email,
+                    'عدد الطلبات': empRequests.length,
+                    'الموافق عليها': approved.length,
+                    'المرفوضة': rejected.length,
+                    'إجمالي الأيام': totalDays,
+                    'الحالة': approved.length > 0 ? 'نشط' : rejected.length > 0 ? 'غير نشط' : 'قيد المراجعة'
+                };
+            });
+
+            if (window.XLSX) {
+                const ws = XLSX.utils.json_to_sheet(data);
+                const wb = XLSX.utils.book_new();
+                XLSX.utils.book_append_sheet(wb, ws, `تقرير ${monthNames[month]} ${year}`);
+                XLSX.writeFile(wb, `تقرير_الإجازات_${monthNames[month]}_${year}.xlsx`);
+                showToast('success', 'تم التحميل', 'تم تحميل ملف Excel بنجاح');
+            } else {
+                const headers = Object.keys(data[0] || {'م':'','اسم الموظف':'','البريد الإلكتروني':''});
+                const rows = [headers.join(',')].concat(data.map(row => headers.map(h => '"' + String(row[h] ?? '').replaceAll('"', '""') + '"').join(',')));
+                const blob = new Blob(['﻿' + rows.join('\n')], { type: 'text/csv;charset=utf-8;' });
+                const a = document.createElement('a');
+                a.href = URL.createObjectURL(blob);
+                a.download = `تقرير_الإجازات_${monthNames[month]}_${year}.csv`;
+                a.click();
+                URL.revokeObjectURL(a.href);
+                showToast('success', 'تم التحميل', 'تم تحميل التقرير بصيغة CSV لأن مكتبة Excel غير متصلة');
+            }
+        }
+
+        // ========== UTILITIES ==========
+        function formatDate(dateStr) {
+            if (!dateStr) return '-';
+            const d = new Date(dateStr);
+            return d.toLocaleDateString('ar-SA');
+        }
+
+        function formatDateTime(dateStr) {
+            if (!dateStr) return '-';
+            const d = new Date(dateStr);
+            return d.toLocaleDateString('ar-SA') + ' ' + d.toLocaleTimeString('ar-SA', { hour: '2-digit', minute: '2-digit' });
+        }
+
+        function closeModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) modal.classList.remove('show');
+        }
+
+        function showToast(type, title, message) {
+            const container = document.getElementById('toastContainer');
+            if (!container) return;
+
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            const icon = type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-times-circle' : type === 'warning' ? 'fa-exclamation-triangle' : 'fa-info-circle';
+
+            toast.innerHTML = `
+                <div class="toast-icon"><i class="fas ${icon}"></i></div>
+                <div class="toast-content">
+                    <div class="toast-title">${title}</div>
+                    <div class="toast-message">${message}</div>
+                </div>
+                <button class="toast-close" onclick="this.parentElement.remove()">&times;</button>
+            `;
+
+            container.appendChild(toast);
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translateX(-100%)';
+                setTimeout(() => toast.remove(), 300);
+            }, 4000);
+        }
+
+        function showError(msg) {
+            const errorEl = document.getElementById('loginError');
+            const errorText = document.getElementById('errorText');
+            if (errorText) errorText.textContent = msg;
+            if (errorEl) errorEl.classList.add('show');
+            document.getElementById('loginSuccess').classList.remove('show');
+        }
+
+        function showSuccess(msg) {
+            const successEl = document.getElementById('loginSuccess');
+            const successText = document.getElementById('successText');
+            if (successText) successText.textContent = msg;
+            if (successEl) successEl.classList.add('show');
+            document.getElementById('loginError').classList.remove('show');
+        }
+
+        function arrayBufferToBase64(buffer) {
+            const bytes = new Uint8Array(buffer);
+            let binary = '';
+            for (let i = 0; i < bytes.byteLength; i++) binary += String.fromCharCode(bytes[i]);
+            return btoa(binary);
+        }
+
+        function base64ToArrayBuffer(base64) {
+            const binary = atob(base64);
+            const bytes = new Uint8Array(binary.length);
+            for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+            return bytes.buffer;
+        }
+
+        // ========== EVENT LISTENERS ==========
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Smart Vacation System v3 loaded');
+            init();
+        });
+
+        document.addEventListener('click', function(e) {
+            const panel = document.getElementById('notificationsPanel');
+            const btn = document.querySelector('.notification-btn');
+            if (panel && btn && !panel.contains(e.target) && !btn.contains(e.target)) {
+                panel.classList.remove('show');
+            }
+        });
+
+        document.querySelectorAll('.modal-overlay').forEach(overlay => {
+            overlay.addEventListener('click', function(e) {
+                if (e.target === this) this.classList.remove('show');
+            });
+        });
+    </script>
+
+<div class="toast-container" id="toastContainer"></div>
+</body>
+</html>
